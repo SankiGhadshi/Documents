@@ -1,0 +1,87 @@
+// Actions for Data Provider 
+    
+    public void dpEnterUsername(String username) {
+    	userNameIP.click();
+    	userNameIP.clear();
+    	userNameIP.sendKeys(username);
+    }
+
+    public void dpenterPassword(String pass_word) {
+    	password.click();
+    	password.clear();
+    	password.sendKeys(pass_word);
+    }
+
+    public void dpclickLogin() {
+    	submitBTN.click();
+    }
+
+    public String getErrorMessage() {
+        return errorMsg.getText();
+    }
+
+----  public class DataProviderUtil {
+
+	    @DataProvider(name = "loginData")
+	    public Object[][] getLoginData() 
+	    {
+	        return new Object[][] {
+	        	{"NDSBI123", "passwd", true},
+	            {"user", "wrongpass", false},
+//	            {"", "", false}
+	        	
+	     };
+	  }
+	
+	
+}
+
+
+------------------------
+------------------------
+package com.lms.testcases;
+
+import java.io.IOException;
+import java.time.Duration;
+
+import org.openqa.selenium.By;
+import org.testng.Assert;
+import org.testng.annotations.DataProvider;
+import org.testng.annotations.Parameters;
+import org.testng.annotations.Test;
+
+import com.lms.base.BaseClass;
+import com.lms.pageobject.LoginPage;
+import com.lms.utilities.CommonMethodsBK;
+import com.lms.utilities.DataProviderUtil;
+
+public class TC_LoginPageValidation extends BaseClass{	
+	
+	@Test(dataProvider = "loginData", dataProviderClass = DataProviderUtil.class)
+    public void testLoginLMS(String username, String pass_word, boolean shouldLoginSucceed) {
+       
+		LoginPage loginPage = new LoginPage(driver);
+
+      
+        loginPage.selectClientRoleLMS();
+        
+        loginPage.dpEnterUsername(username);
+        
+        loginPage.dpenterPassword(pass_word);
+        
+        loginPage.dpclickLogin();
+        
+        String curl = driver.getCurrentUrl();
+        System.out.println(curl);
+
+//        if (shouldLoginSucceed) 
+//        {
+//            Assert.assertNotEquals(driver.getCurrentUrl(), "https://portallmstest.sbifactors.in/", "Login failed when it should have succeeded.");
+//        } 
+//        else 
+//        {
+//            Assert.assertTrue(loginPage.getErrorMessage().contains("Invalid") || loginPage.getErrorMessage().length() > 0, "Expected error message not shown.");
+//        }
+    }
+
+}
